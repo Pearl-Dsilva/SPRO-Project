@@ -15,7 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,14 +30,13 @@ import java.io.FileInputStream
 
 class OCRActivity : ComponentActivity() {
 
-    private lateinit var files: MutableList<File>
+    private var filesState by mutableStateOf(mutableStateListOf<File>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SPROJTheme {
-
-                FileListView(files) {
+                FileListView(filesState) {
                     val result = FileHandler().deleteFile(it)
                     if (result) {
                         Toast.makeText(
@@ -41,7 +44,7 @@ class OCRActivity : ComponentActivity() {
                             "File Deleted: ${it.name}",
                             Toast.LENGTH_LONG
                         ).show()
-                        files.remove(it)
+                        filesState.remove(it)
                     } else {
                         Toast.makeText(
                             applicationContext,
@@ -56,12 +59,9 @@ class OCRActivity : ComponentActivity() {
     }
 
     private fun loadFiles() {
-        files = FileHandler().getFilesInDirectory(filesDir).toMutableList()
+        filesState.addAll(FileHandler().getFilesInDirectory(filesDir))
     }
 
-    companion object {
-        private const val TAG = "OCRActivity"
-    }
 }
 
 @Composable
