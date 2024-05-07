@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SPROJ</string>
+    <string name="title_activity_file_list">FileList</string>
+    <string name="title_activity_ocractivity">OCRActivity</string>
+</resources>
